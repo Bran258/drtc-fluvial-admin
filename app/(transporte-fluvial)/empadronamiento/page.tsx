@@ -1,93 +1,183 @@
-import React from 'react';
-import { Plus, BarChart3, Ship, ClipboardList, ChevronRight, ArrowUpRight } from 'lucide-react';
+"use client";
 
-export default function EmpadronamientoPage() {
-  const stats = [
+import { useState } from "react";
+import { Search } from "lucide-react";
+import ModalDetalle from "@/components/ModalDetalle";
+import { Item } from "@/types/item";
+
+export default function Page() {
+  const [search, setSearch] = useState("");
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+
+  const data: Item[] = [
     {
-      title: "Total Empadronados",
-      value: "1,248",
-      trend: "+4%",
-      status: "ACTUALIZADO AHORA",
-      icon: BarChart3,
-      iconBg: "bg-slate-100",
-      iconColor: "text-[#001f3f]",
-      accent: "border-b-4 border-[#001f3f]"
+      codigo: "EMP001",
+      solicitante: "Juan Pérez",
+      dni: "12345678",
+      direccion: "Puerto Maldonado",
+      matricula: "MAT-001",
+      capacidad: "10 TN",
+      color: "Azul",
+      nombreNave: "El Navegante",
+      tipo: "Lancha",
+      marcaMotor: "Yamaha",
+      potencia: "150 HP",
+      material: "Fibra",
     },
     {
-      title: "Total de Naves",
-      value: "12",
-      status: "HASTA EL DIA DE HOY",
-      icon: Ship, // Representando el icono "NEW" de la imagen
-      iconBg: "bg-blue-50",
-      iconColor: "text-blue-600",
-      accent: ""
+      codigo: "EMP002",
+      solicitante: "María López",
+      dni: "87654321",
+      direccion: "Madre de Dios",
+      matricula: "MAT-002",
+      capacidad: "8 TN",
+      color: "Blanco",
+      nombreNave: "Río Azul",
+      tipo: "Bote",
+      marcaMotor: "Honda",
+      potencia: "90 HP",
+      material: "Madera",
     },
-    {
-      title: "Tipo de material casco",
-      value: "6",
-      status: "ACTUALIZADO AHORA",
-      statusColor: "text-red-500",
-      icon: ClipboardList,
-      iconBg: "bg-orange-50",
-      iconColor: "text-orange-600",
-      accent: "border-b-4 border-orange-800"
-    }
   ];
 
+  const filteredData = data.filter((item) =>
+    Object.values(item)
+      .join(" ")
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
+
   return (
-    <div className="p-8 bg-slate-50 min-h-screen font-sans">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-xs text-slate-400 mb-2 font-medium">
-        <span>Trámites</span>
-        <ChevronRight size={12} />
-        <span className="text-slate-600">Empadronamiento</span>
-      </nav>
+    <div className="space-y-6 p-6">
 
-      {/* Header con Título y Botón */}
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-          Gestión de Empadronamiento
-        </h1>
-        
-        <button className="bg-[#001f3f] hover:bg-[#002d5c] text-white px-5 py-2.5 rounded-lg flex items-center gap-2 font-semibold text-sm transition-all shadow-md">
-          <Plus size={20} strokeWidth={3} />
-          Nuevo Empadronamiento
-        </button>
-      </div>
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-      {/* Grid de Tarjetas de Estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {stats.map((stat, index) => (
-          <div 
-            key={index} 
-            className={`bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between h-48 relative overflow-hidden ${stat.accent}`}
-          >
-            <div className="flex justify-between items-start">
-              {/* Icono */}
-              <div className={`p-3 rounded-xl ${stat.iconBg}`}>
-                <stat.icon className={stat.iconColor} size={24} />
-              </div>
-              
-              {/* Status Text */}
-              <span className={`text-[10px] font-bold tracking-wider ${stat.statusColor || 'text-slate-400'}`}>
-                {stat.status}
-              </span>
-            </div>
+        <div>
+          <h2 className="text-lg font-semibold text-[#003366]">
+            Lista de Empadronamiento
+          </h2>
+          <p className="text-sm text-[#6B788F]">
+            {filteredData.length} registros encontrados
+          </p>
+        </div>
 
-            <div className="mt-4">
-              <p className="text-slate-500 text-sm font-medium mb-1">{stat.title}</p>
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-bold text-slate-900">{stat.value}</span>
-                {stat.trend && (
-                  <span className="text-emerald-500 text-sm font-bold flex items-center">
-                    {stat.trend} <ArrowUpRight size={14} />
-                  </span>
-                )}
-              </div>
-            </div>
+        {/* BUSCADOR */}
+        <div className="relative w-full md:w-80">
+          <div className="flex items-center gap-2 bg-white border border-[#E2E8F0] rounded-xl px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-[#003366]">
+            <Search size={18} className="text-[#6B788F]" />
+
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-transparent text-sm focus:outline-none text-[#6B788F]"
+            />
           </div>
-        ))}
+        </div>
       </div>
+
+      {/* TABLA */}
+      <div className="bg-white rounded-2xl border border-[#E2E8F0] shadow-sm overflow-hidden">
+
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+
+            {/* HEADER */}
+            <thead className="bg-[#F4F7F9] text-[#6B788F] text-xs uppercase">
+              <tr>
+                <th className="px-6 py-4 text-left">Código</th>
+                <th className="px-6 py-4 text-left">Solicitante</th>
+                <th className="px-6 py-4 text-left">Documento</th>
+                <th className="px-6 py-4 text-left">Nave</th>
+                <th className="px-6 py-4 text-left">Tipo</th>
+                <th className="px-6 py-4 text-left">Motor</th>
+                <th className="px-6 py-4 text-left">Capacidad</th>
+                <th className="px-6 py-4 text-left">Material</th>
+              </tr>
+            </thead>
+
+            {/* BODY */}
+            <tbody className="divide-y divide-[#F1F5F9]">
+              {filteredData.length > 0 ? (
+                filteredData.map((item, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => setSelectedItem(item)}
+                    className="group hover:bg-[#F9FBFC] transition cursor-pointer"
+                  >
+                    <td className="px-6 py-4 font-semibold text-[#003366]">
+                      {item.codigo}
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col">
+                        <span className="font-medium">{item.solicitante}</span>
+                        <span className="text-xs text-[#6B788F]">
+                          {item.direccion}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4 text-[#6B788F]">
+                      {item.dni}
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col">
+                        <span>{item.nombreNave}</span>
+                        <span className="text-xs text-[#6B788F]">
+                          {item.matricula}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 text-xs rounded-md bg-[#F4F7F9] text-[#003366]">
+                        {item.tipo}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col">
+                        <span>{item.marcaMotor}</span>
+                        <span className="text-xs text-[#003366] font-medium">
+                          {item.potencia}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4 text-[#6B788F]">
+                      {item.capacidad}
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 text-xs rounded-md bg-[#F4F7F9] text-[#592300]">
+                        {item.material}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8} className="text-center py-12 text-[#6B788F]">
+                    No se encontraron resultados
+                  </td>
+                </tr>
+              )}
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+      {/* MODAL */}
+      <ModalDetalle
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+      />
+
     </div>
   );
 }

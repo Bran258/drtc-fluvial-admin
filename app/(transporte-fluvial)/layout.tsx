@@ -20,7 +20,7 @@ export default function TransporteFluvialLayout({
         <Navbar />
 
         {/* Contenido */}
-        <main className="flex-1 bg-zinc-100 p-6 overflow-y-auto">
+        <main className="flex-1 bg-zinc-100 overflow-y-auto">
           {children}
         </main>
 
