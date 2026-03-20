@@ -1,5 +1,6 @@
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 export default function TransporteFluvialLayout({
   children,
@@ -8,18 +9,24 @@ export default function TransporteFluvialLayout({
 }) {
   return (
     <div className="flex h-screen">
+      
       {/* Sidebar */}
       <Sidebar />
 
-      {/* Contenido */}
+      {/* Contenedor principal */}
       <div className="flex flex-col flex-1">
-        {/* Navbar arriba */}
+        
+        {/* Navbar */}
         <Navbar />
 
-        {/* Contenido debajo */}
+        {/* Contenido */}
         <main className="flex-1 bg-zinc-100 p-6 overflow-y-auto">
           {children}
         </main>
+
+        {/* Footer */}
+        <Footer />
+
       </div>
     </div>
   );
