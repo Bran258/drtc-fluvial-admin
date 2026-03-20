@@ -126,7 +126,7 @@ const Sidebar = () => {
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 transition-all duration-200"
+          className="cursor-pointer flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-800 text-white hover:bg-zinc-700 transition-all duration-200"
         >
           {collapsed ? (
             <PanelLeftOpen size={18} />
