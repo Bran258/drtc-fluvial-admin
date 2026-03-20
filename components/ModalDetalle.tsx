@@ -1,7 +1,7 @@
 "use client";
 
-import { Item } from "@/types/item";
-import {X } from "lucide-react";
+import type { Item } from "@/types/item";
+import { X } from "lucide-react";
 
 type Props = {
   item: Item | null;
@@ -17,7 +17,7 @@ export default function ModalDetalle({ item, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl animate-in fade-in zoom-in-95"
+        className="bg-white rounded-2xl p-6 w-full max-w-2xl shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* HEADER */}
@@ -49,10 +49,10 @@ export default function ModalDetalle({ item, onClose }: Props) {
             </h4>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <Item label="Código" value={item.codigo} />
-              <Item label="DNI" value={item.dni} />
-              <Item label="Solicitante" value={item.solicitante} />
-              <Item label="Dirección" value={item.direccion} />
+              <DatosLista label="Código" value={item.codigo} />
+              <DatosLista label="DNI" value={item.dni} />
+              <DatosLista label="Solicitante" value={item.solicitante} />
+              <DatosLista label="Dirección" value={item.direccion} />
             </div>
           </div>
 
@@ -63,11 +63,11 @@ export default function ModalDetalle({ item, onClose }: Props) {
             </h4>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <Item label="Nombre" value={item.nombreNave} />
-              <Item label="Matrícula" value={item.matricula} />
-              <Item label="Tipo" value={item.tipo} />
-              <Item label="Capacidad" value={item.capacidad} />
-              <Item label="Material" value={item.material} />
+              <DatosLista label="Nombre" value={item.nombreNave} />
+              <DatosLista label="Matrícula" value={item.matricula} />
+              <DatosLista label="Tipo" value={item.tipo} />
+              <DatosLista label="Capacidad" value={item.capacidad} />
+              <DatosLista label="Material" value={item.material} />
             </div>
           </div>
 
@@ -78,20 +78,19 @@ export default function ModalDetalle({ item, onClose }: Props) {
             </h4>
 
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <Item label="Marca" value={item.marcaMotor} />
-              <Item label="Potencia" value={item.potencia} />
+              <DatosLista label="Marca" value={item.marcaMotor} />
+              <DatosLista label="Potencia" value={item.potencia} />
             </div>
           </div>
 
         </div>
-
       </div>
     </div>
   );
 }
 
-/* 🔹 Subcomponente para reutilizar campos */
-function Item({ label, value }: { label: string; value: string }) {
+/* 🔹 Subcomponente */
+function DatosLista({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col">
       <span className="text-xs text-[#64748B]">{label}</span>
