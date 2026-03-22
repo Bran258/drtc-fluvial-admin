@@ -42,7 +42,7 @@ export default function ModalDetalle({ item, onClose }: Props) {
         {/* CONTENIDO */}
         <div className="space-y-6">
 
-          {/* SECCIÓN: GENERAL */}
+          {/* SECCIÓN: SOLICITANTE */}
           <div>
             <h4 className="text-sm font-semibold text-[#1E293B] mb-3">
               Datos del Solicitante
@@ -50,8 +50,24 @@ export default function ModalDetalle({ item, onClose }: Props) {
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <DatosLista label="Código" value={item.codigo} />
-              <DatosLista label="DNI" value={item.dni} />
-              <DatosLista label="Solicitante" value={item.solicitante} />
+
+              <DatosLista
+                label="Documento"
+                value={`${item.tipoDocumento} ${item.numeroDocumento}`}
+              />
+
+              {item.tipoPersona === "natural" ? (
+                <DatosLista
+                  label="Nombre"
+                  value={item.nombreCompleto || ""}
+                />
+              ) : (
+                <DatosLista
+                  label="Razón Social"
+                  value={item.razonSocial || ""}
+                />
+              )}
+
               <DatosLista label="Dirección" value={item.direccion} />
             </div>
           </div>
@@ -66,6 +82,7 @@ export default function ModalDetalle({ item, onClose }: Props) {
               <DatosLista label="Nombre" value={item.nombreNave} />
               <DatosLista label="Matrícula" value={item.matricula} />
               <DatosLista label="Tipo" value={item.tipo} />
+              <DatosLista label="Color" value={item.color} />
               <DatosLista label="Capacidad" value={item.capacidad} />
               <DatosLista label="Material" value={item.material} />
             </div>
@@ -94,7 +111,9 @@ function DatosLista({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex flex-col">
       <span className="text-xs text-[#64748B]">{label}</span>
-      <span className="font-medium text-[#0F172A]">{value}</span>
+      <span className="font-medium text-[#0F172A]">
+        {value || "-"}
+      </span>
     </div>
   );
 }
