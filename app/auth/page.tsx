@@ -19,30 +19,29 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(process.env.NEXT_PUBLIC_API_URL);
-
     try {
-      const res = await fetch(
-        "https://backend-drtc-fluvial.onrender.com/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(form),
-        }
-      );
+      const API = process.env.NEXT_PUBLIC_API_URL;
+
+      const res = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // 🔥 OBLIGATORIO
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
 
       if (!res.ok) {
-        alert("Error login");
+        alert(data.message || "Error login");
         return;
       }
 
       window.location.href = "/dashboard";
     } catch (error) {
-      console.error("Error en fetch:", error);
-      alert("No se pudo conectar con el servidor");
+      console.error(error);
+      alert("Error de conexión");
     }
   };
   return (
