@@ -12,7 +12,7 @@ const subNavItems = [
   { label: "Reportes", href: "/empadronamiento/reportes" },
 ];
 
-export default function EmpadronamientoLayout({
+export default function Page({
   children,
 }: {
   children: React.ReactNode;
