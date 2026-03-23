@@ -122,14 +122,24 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("https://backend-drtc-fluvial.onrender.com/auth/logout", {
+      const API = process.env.NEXT_PUBLIC_API_URL;
+
+      const res = await fetch(`${API}/auth/logout`, {
         method: "POST",
-        credentials: "include",
+        credentials: "include", // 🔥 obligatorio para borrar cookies
       });
 
-      router.push("/auth");
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Error al cerrar sesión");
+        return;
+      }
+
+      window.location.href = "/auth";
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
+      alert("Error de conexión");
     }
   };
 
@@ -212,8 +222,8 @@ const Sidebar = () => {
                             if (isDisabled) e.preventDefault();
                           }}
                           className={`flex items-center justify-center  ${collapsed
-                              ? "w-12 h-12 p-0"
-                              : "gap-3 px-3 w-full"
+                            ? "w-12 h-12 p-0"
+                            : "gap-3 px-3 w-full"
                             } py-2.5 rounded-xl text-sm transition-all ${isDisabled
                               ? "text-slate-400 cursor-not-allowed opacity-70"
                               : isActive
