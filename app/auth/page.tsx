@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { User, Lock, Eye, Ship, LogIn, Mail } from 'lucide-react';
 import Link from 'next/link';
+import axios from "@/lib/axios";
 
 export default function LoginPage() {
   const [form, setForm] = useState({
@@ -20,28 +21,14 @@ export default function LoginPage() {
     e.preventDefault();
 
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL;
+      const { email, password } = form;
 
-      const res = await fetch(`${API}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // 🔥 OBLIGATORIO
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Error login");
-        return;
-      }
+      await axios.post("/auth/login", { email, password });
 
       window.location.href = "/dashboard";
-    } catch (error) {
-      console.error(error);
-      alert("Error de conexión");
+
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Error de conexión");
     }
   };
   return (
