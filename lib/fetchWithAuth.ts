@@ -5,7 +5,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   });
 
   if (res.status === 401) {
-    const refresh = await fetch("http://localhost:3001/auth/refresh", {
+    const refresh = await fetch("https://backend-drtc-fluvial.onrender.com/auth/refresh", {
       method: "POST",
       credentials: "include",
     });

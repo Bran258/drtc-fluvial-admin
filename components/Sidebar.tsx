@@ -122,7 +122,7 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3001/auth/logout", {
+      await fetch("https://backend-drtc-fluvial.onrender.com/auth/logout", {
         method: "POST",
         credentials: "include",
       });
