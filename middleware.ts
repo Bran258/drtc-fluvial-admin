@@ -9,7 +9,7 @@ export function middleware(request: NextRequest) {
 
   const isProtectedRoute =
     pathname.startsWith("/dashboard") ||
-    // pathname.startsWith("/empadronamiento") ||
+    pathname.startsWith("/empadronamiento") ||
     pathname.startsWith("/permiso-operacion") ||
     pathname.startsWith("/renovacion");
 
