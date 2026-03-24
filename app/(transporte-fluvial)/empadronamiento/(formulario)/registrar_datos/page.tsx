@@ -6,8 +6,20 @@ import TitleHeader from "@/components/TitleHeader";
 import BackButton from "@/components/BackButton";
 import Button from "@/components/Button";
 
+import { useSpeech } from "@/hooks/useSpeech";
+import { GUIA_FORMULARIO } from "@/features/transporte-fluvial/empadronamiento/utils/guiaFormulario";
+
 const EmpadronamientoForm = () => {
   const [tipoPersona, setTipoPersona] = React.useState<"natural" | "juridica">("natural");
+  const { hablar, detener, estaHablando } = useSpeech();
+
+  const handleGuia = () => {
+    if (estaHablando()) {
+      detener();
+    } else {
+      hablar(GUIA_FORMULARIO);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] p-8 font-sans text-slate-700">
@@ -26,7 +38,14 @@ const EmpadronamientoForm = () => {
       </div>
 
       <form className="max-w-4xl mx-auto space-y-8">
-
+        {/* 🔊 BOTÓN DE GUÍA DE VOZ */}
+        <button
+          type="button"
+          onClick={handleGuia}
+          className="fixed bottom-6 right-6 bg-[#001f3f] hover:bg-[#003366] text-white p-4 rounded-full shadow-lg transition-all"
+        >
+          {estaHablando() ? "⏹️" : "🔊"}
+        </button>
         {/* SECCIÓN 1 */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
