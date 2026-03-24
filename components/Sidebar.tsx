@@ -122,11 +122,10 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL;
 
-      const res = await fetch(`${API}/auth/logout`, {
+      const res = await fetch(`/api/auth/logout`, {
         method: "POST",
-        credentials: "include", // 🔥 obligatorio para borrar cookies
+        credentials: "include",
       });
 
       const data = await res.json();
