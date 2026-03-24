@@ -60,7 +60,7 @@ const EmpadronamientoForm = () => {
                 <button
                   type="button"
                   onClick={() => setTipoPersona("juridica")}
-                  className={`px-6 py-2 text-xs font-bold ${tipoPersona === "juridica"
+                  className={`px-6 py-2 rounded-lg text-xs font-bold ${tipoPersona === "juridica"
                     ? "bg-white shadow-sm text-[#001f3f]"
                     : "text-slate-400"
                     }`}
@@ -76,6 +76,8 @@ const EmpadronamientoForm = () => {
               <CustomInput
                 label={tipoPersona === "natural" ? "DNI" : "RUC"}
                 placeholder={tipoPersona === "natural" ? "Ingrese DNI" : "Ingrese RUC"}
+                type="text" // importante (no number)
+                maxLength={tipoPersona === "natural" ? 8 : 11}
               />
 
               <CustomInput
@@ -111,8 +113,8 @@ const EmpadronamientoForm = () => {
           <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-8">
 
             <CustomInput label="Nombre de la Nave" placeholder="Ej. El Amazónico II" />
-            <CustomInput label="Matrícula" placeholder="IQ-12345-F" />
-            <CustomInput label="Capacidad" placeholder="N° Pasajeros / TM Carga" />
+            <CustomInput label="Matrícula" placeholder="PM-12345-BF" />
+            <CustomInput label="Capacidad de la nave A.B" placeholder="N° Pasajeros / TM Carga" type="number" />
             <CustomInput label="Color" placeholder="Ej. Azul y Blanco" />
 
             <div className="flex flex-col gap-2">
@@ -122,8 +124,66 @@ const EmpadronamientoForm = () => {
               <div className="relative">
                 <select className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
                   <option>Seleccione tipo</option>
+                  <option value="Tipo_simple">Simple</option>
+                  <option value="No_definido">No definido</option>
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Servicio de la Nave
+              </label>
+
+              <div className="relative">
+                <select className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
+                  <option value="">Seleccione servicio</option>
+                  <option value="transporte_comercial">Transporte Comercial</option>
+                  <option value="transporte_turistico">Transporte Turístico</option>
+                </select>
+
+                <ChevronDown
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={16}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Modalidad de Servicio
+              </label>
+
+              <div className="relative">
+                <select className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
+                  <option value="">Seleccione modalidad</option>
+
+                  <option value="carga_pasajeros_menor_2ab">
+                    De carga y pasajeros menor a 2 A.B
+                  </option>
+
+                  <option value="carga_pasajeros_mayor_2ab">
+                    De carga y pasajeros mayor a 2 A.B
+                  </option>
+
+                  <option value="pasajeros_menor_2ab">
+                    De pasajeros menor a 2 A.B
+                  </option>
+
+                  <option value="carga_mayor_2ab">
+                    De carga mayor a 2 A.B
+                  </option>
+
+                  <option value="uso_exclusivo_personal">
+                    De uso exclusivo de personal
+                  </option>
+                </select>
+
+                <ChevronDown
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+                  size={16}
+                />
               </div>
             </div>
 
@@ -134,6 +194,12 @@ const EmpadronamientoForm = () => {
               <div className="relative">
                 <select className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
                   <option>Seleccione material</option>
+                  <option value="Fibra_vidrio">Fibra de Vidrio</option>
+                  <option value="Madera">Madera</option>
+                  <option value="Acero_naval">Acero Naval</option>
+                  <option value="Aluminio">Aluminio</option>
+                  <option value="Aluminio_naval">Aluminio Naval</option>
+                  <option value="No_especificado">No especificado</option>
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
               </div>
@@ -154,7 +220,7 @@ const EmpadronamientoForm = () => {
 
           <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
             <CustomInput label="Marca del Motor" placeholder="Ej. Yamaha, Volvo Penta" />
-            <CustomInput label="Potencia (HP)" placeholder="Ej. 250" />
+            <CustomInput label="Potencia (HP)" placeholder="Ej. 250" type="number" />
           </div>
         </div>
 
@@ -164,7 +230,7 @@ const EmpadronamientoForm = () => {
             Cancelar
           </button>
           <Button
-            
+
             icon={<Save size={16} />}
             variant="primary"
           >
@@ -178,7 +244,14 @@ const EmpadronamientoForm = () => {
 };
 
 /* INPUT */
-const CustomInput = ({ label, placeholder, error, icon }: any) => (
+const CustomInput = ({
+  label,
+  placeholder,
+  error,
+  icon,
+  type = "text",
+  maxLength,
+}: any) => (
   <div className="flex flex-col gap-2">
     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
       {label}
@@ -192,8 +265,16 @@ const CustomInput = ({ label, placeholder, error, icon }: any) => (
       )}
 
       <input
-        type="text"
+        type={type}
         placeholder={placeholder}
+        maxLength={maxLength}
+        inputMode={type === "number" ? "numeric" : "text"}
+        onInput={(e: any) => {
+          // si tiene maxLength tipo DNI/RUC → solo números
+          if (maxLength) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, "");
+          }
+        }}
         className={`w-full py-2 ${icon ? "pl-6" : "pl-0"} bg-transparent border-b-2 ${error
           ? "border-red-200 focus:border-red-400"
           : "border-slate-200 focus:border-[#001f3f]"
