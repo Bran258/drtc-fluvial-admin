@@ -6,6 +6,7 @@ export const EMPADRONAMIENTO_TOURS = {
                 title: "Datos del Titular",
                 description: "Aquí ingresas los datos del propietario",
             },
+            stagePadding: 10, 
         },
         {
             element: "#bloque-nave",
@@ -13,6 +14,7 @@ export const EMPADRONAMIENTO_TOURS = {
                 title: "Datos de la Nave",
                 description: "Información de la embarcación",
             },
+            stagePadding: 10, 
         },
         {
             element: "#bloque-motor",
@@ -20,6 +22,7 @@ export const EMPADRONAMIENTO_TOURS = {
                 title: "Motor",
                 description: "Datos del motor",
             },
+            stagePadding: 10, 
         },
     ],
 
@@ -30,6 +33,7 @@ export const EMPADRONAMIENTO_TOURS = {
                 title: "DNI / RUC",
                 description: "Ingresa tu documento",
             },
+            stagePadding: 10, 
         },
         {
             element: "#nombre",
@@ -37,6 +41,7 @@ export const EMPADRONAMIENTO_TOURS = {
                 title: "Nombre",
                 description: "Nombre completo o razón social",
             },
+            stagePadding: 10, 
         },
     ],
 
@@ -47,6 +52,7 @@ export const EMPADRONAMIENTO_TOURS = {
                 title: "Inicio",
                 description: "Primero esta sección",
             },
+            stagePadding: 10, 
         },
         {
             element: "#Tipo_persona",
@@ -54,6 +60,7 @@ export const EMPADRONAMIENTO_TOURS = {
                 title: "Persona Natural o Jurídica",
                 description: "Selecciona si es persona natural o jurídica, respectivamente",
             },
+            stagePadding: 10, 
         },
         {
             element: "#dni-ruc",
@@ -61,6 +68,7 @@ export const EMPADRONAMIENTO_TOURS = {
                 title: "Documento",
                 description: "Aquí empiezas",
             },
+            stagePadding: 10, 
         },
     ],
 };

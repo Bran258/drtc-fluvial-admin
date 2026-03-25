@@ -78,17 +78,25 @@ const EmpadronamientoForm = () => {
 
     if (!result.isConfirmed) return;
 
-    const id = toastEmpadronamiento.loading("Guardando datos...");
+    const toastId = toastEmpadronamiento.loading("Guardando datos...");
 
     try {
-      // 🔹 aquí tu API real
       await new Promise((res) => setTimeout(res, 1500));
 
-      toastEmpadronamiento.success("Datos guardados correctamente", { id });
+      toastEmpadronamiento.success("Datos guardados correctamente", toastId);
     } catch (error) {
-      toastEmpadronamiento.error("Error al guardar", { id });
+      toastEmpadronamiento.error("Error al guardar", toastId);
     }
   };
+
+  React.useEffect(() => {
+    const yaVioTour = localStorage.getItem("tour_empadronamiento");
+
+    if (!yaVioTour) {
+      startTour(EMPADRONAMIENTO_TOURS.bloques);
+      localStorage.setItem("tour_empadronamiento", "true");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] p-8 font-sans text-slate-700">
@@ -124,7 +132,7 @@ const EmpadronamientoForm = () => {
       </div>
 
       <form className="max-w-4xl mx-auto space-y-8" onSubmit={handleSubmit}>
-        {/* 🔊 BOTÓN DE GUÍA DE VOZ */}
+        {/* BOTÓN DE GUÍA DE VOZ */}
         <button
           type="button"
           onClick={handleGuia}

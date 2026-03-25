@@ -2,11 +2,17 @@ import toast from "react-hot-toast";
 
 // 🔹 EMPADRONAMIENTO
 export const toastEmpadronamiento = {
-    success: (msg: string) =>
-        toast.success(msg, { toasterId: "left" }),
+    success: (msg: string, id?: string) =>
+        toast.success(msg, {
+            id,
+            toasterId: "left",
+        }),
 
-    error: (msg: string) =>
-        toast.error(msg, { toasterId: "left" }),
+    error: (msg: string, id?: string) =>
+        toast.error(msg, {
+            id,
+            toasterId: "left",
+        }),
 
     loading: (msg: string) =>
         toast.loading(msg, { toasterId: "left" }),
