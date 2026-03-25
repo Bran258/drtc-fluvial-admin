@@ -6,18 +6,87 @@ import TitleHeader from "@/components/TitleHeader";
 import BackButton from "@/components/BackButton";
 import Button from "@/components/Button";
 
+import { toastEmpadronamiento } from "@/lib/toast";
+import Swal from "sweetalert2";
+
 import { useSpeech } from "@/hooks/useSpeech";
 import { GUIA_FORMULARIO } from "@/features/transporte-fluvial/empadronamiento/utils/guiaFormulario";
+
+import { useTour } from "@/hooks/useTour";
+import { EMPADRONAMIENTO_TOURS } from "@/tours/empadronamiento.tour";
 
 const EmpadronamientoForm = () => {
   const [tipoPersona, setTipoPersona] = React.useState<"natural" | "juridica">("natural");
   const { hablar, detener, estaHablando } = useSpeech();
+  const { startTour } = useTour();
 
   const handleGuia = () => {
     if (estaHablando()) {
       detener();
     } else {
       hablar(GUIA_FORMULARIO);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const form = e.target as HTMLFormElement;
+    const inputs = form.querySelectorAll("input, select");
+
+    let camposVacios: string[] = [];
+
+    inputs.forEach((input: any) => {
+      if (input.hasAttribute("required") && !input.value.trim()) {
+        const label =
+          input.closest("div")?.querySelector("label")?.innerText ||
+          "Campo requerido";
+        camposVacios.push(label);
+      }
+    });
+
+    // VALIDACIÓN DE CAMPOS VACÍOS
+    if (camposVacios.length > 0) {
+      await Swal.fire({
+        title: "Campos incompletos",
+        html: `
+        <div style="text-align:left; font-size:14px">
+          Debes completar los siguientes campos:<br/><br/>
+          <b>• ${camposVacios.join("<br/>• ")}</b>
+        </div>
+      `,
+        icon: "warning",
+        confirmButtonText: "Entendido",
+        confirmButtonColor: "#001f3f",
+      });
+
+      return;
+    }
+
+    // ✅ CONFIRMACIÓN DE GUARDADO
+    const result = await Swal.fire({
+      title: "¿Guardar datos?",
+      text: "Se registrará la información del empadronamiento",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, guardar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#001f3f",
+      cancelButtonColor: "#64748b",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    const id = toastEmpadronamiento.loading("Guardando datos...");
+
+    try {
+      // 🔹 aquí tu API real
+      await new Promise((res) => setTimeout(res, 1500));
+
+      toastEmpadronamiento.success("Datos guardados correctamente", { id });
+    } catch (error) {
+      toastEmpadronamiento.error("Error al guardar", { id });
     }
   };
 
@@ -37,7 +106,24 @@ const EmpadronamientoForm = () => {
         </p>
       </div>
 
-      <form className="max-w-4xl mx-auto space-y-8">
+      {/* GUÍA DE USO*/}
+      <div className="fixed top-20 right-6 flex flex-col gap-2">
+        <button
+          onClick={() => startTour(EMPADRONAMIENTO_TOURS.bloques)}
+          className="bg-blue-600 text-white px-3 py-2 rounded-lg shadow"
+        >
+          Guía rápida
+        </button>
+
+        <button
+          onClick={() => startTour(EMPADRONAMIENTO_TOURS.completo)}
+          className="bg-slate-600 text-white px-3 py-2 rounded-lg shadow"
+        >
+          Guía detallada
+        </button>
+      </div>
+
+      <form className="max-w-4xl mx-auto space-y-8" onSubmit={handleSubmit}>
         {/* 🔊 BOTÓN DE GUÍA DE VOZ */}
         <button
           type="button"
@@ -47,7 +133,7 @@ const EmpadronamientoForm = () => {
           {estaHablando() ? "⏹️" : "🔊"}
         </button>
         {/* SECCIÓN 1 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div id="bloque-titular" className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
           <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center gap-3">
             <div className="bg-[#001f3f] p-1.5 rounded-lg text-white">
@@ -59,7 +145,7 @@ const EmpadronamientoForm = () => {
           <div className="p-8 space-y-8">
 
             {/* Tipo Persona */}
-            <div className="space-y-3">
+            <div id="Tipo_persona" className="space-y-3">
               <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Tipo de Persona
               </label>
@@ -93,15 +179,18 @@ const EmpadronamientoForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
 
               <CustomInput
+                id="dni-ruc"
                 label={tipoPersona === "natural" ? "DNI" : "RUC"}
                 placeholder={tipoPersona === "natural" ? "Ingrese DNI" : "Ingrese RUC"}
                 type="text" // importante (no number)
                 maxLength={tipoPersona === "natural" ? 8 : 11}
+                required
               />
 
               <CustomInput
                 label={tipoPersona === "natural" ? "Nombre Completo" : "Razón Social"}
                 placeholder={tipoPersona === "natural" ? "Nombre completo" : "Razón Social"}
+                required
               />
 
               <CustomInput
@@ -113,6 +202,7 @@ const EmpadronamientoForm = () => {
               <CustomInput
                 label="Dirección Legal"
                 placeholder="Av. Principal 123, Iquitos"
+                required
               />
 
             </div>
@@ -120,7 +210,7 @@ const EmpadronamientoForm = () => {
         </div>
 
         {/* SECCIÓN 2 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div id="bloque-nave" className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
           <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center gap-3">
             <div className="bg-[#001f3f] p-1.5 rounded-lg text-white">
@@ -132,7 +222,7 @@ const EmpadronamientoForm = () => {
           <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-8">
 
             <CustomInput label="Nombre de la Nave" placeholder="Ej. El Amazónico II" />
-            <CustomInput label="Matrícula" placeholder="PM-12345-BF" />
+            <CustomInput label="Matrícula" placeholder="PM-12345-BF" required />
             <CustomInput label="Capacidad de la nave A.B" placeholder="N° Pasajeros / TM Carga" type="number" />
             <CustomInput label="Color" placeholder="Ej. Azul y Blanco" />
 
@@ -141,8 +231,10 @@ const EmpadronamientoForm = () => {
                 Tipo de Nave
               </label>
               <div className="relative">
-                <select className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
-                  <option>Seleccione tipo</option>
+                <select
+                  required
+                  className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
+                  <option value="">Seleccione tipo</option>
                   <option value="Tipo_simple">Simple</option>
                   <option value="No_definido">No definido</option>
                 </select>
@@ -156,7 +248,9 @@ const EmpadronamientoForm = () => {
               </label>
 
               <div className="relative">
-                <select className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
+                <select
+                  required
+                  className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
                   <option value="">Seleccione servicio</option>
                   <option value="transporte_comercial">Transporte Comercial</option>
                   <option value="transporte_turistico">Transporte Turístico</option>
@@ -175,7 +269,9 @@ const EmpadronamientoForm = () => {
               </label>
 
               <div className="relative">
-                <select className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
+                <select
+                  required
+                  className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
                   <option value="">Seleccione modalidad</option>
 
                   <option value="carga_pasajeros_menor_2ab">
@@ -211,8 +307,10 @@ const EmpadronamientoForm = () => {
                 Material del Casco
               </label>
               <div className="relative">
-                <select className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
-                  <option>Seleccione material</option>
+                <select
+                  required
+                  className="w-full py-2 bg-slate-100 rounded-lg px-4 text-sm font-medium appearance-none outline-none focus:ring-2 focus:ring-blue-100">
+                  <option value="">Seleccione material</option>
                   <option value="Fibra_vidrio">Fibra de Vidrio</option>
                   <option value="Madera">Madera</option>
                   <option value="Acero_naval">Acero Naval</option>
@@ -228,7 +326,7 @@ const EmpadronamientoForm = () => {
         </div>
 
         {/* SECCIÓN 3 */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+        <div id="bloque-motor" className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
 
           <div className="bg-slate-50/50 px-6 py-4 border-b border-slate-100 flex items-center gap-3">
             <div className="bg-[#5d4037] p-1.5 rounded-lg text-white">
@@ -249,7 +347,7 @@ const EmpadronamientoForm = () => {
             Cancelar
           </button>
           <Button
-
+            type="submit"
             icon={<Save size={16} />}
             variant="primary"
           >
@@ -264,12 +362,14 @@ const EmpadronamientoForm = () => {
 
 /* INPUT */
 const CustomInput = ({
+  id,
   label,
   placeholder,
   error,
   icon,
   type = "text",
   maxLength,
+  required = false,
 }: any) => (
   <div className="flex flex-col gap-2">
     <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
@@ -284,9 +384,11 @@ const CustomInput = ({
       )}
 
       <input
+        id={id}
         type={type}
         placeholder={placeholder}
         maxLength={maxLength}
+        required={required}
         inputMode={type === "number" ? "numeric" : "text"}
         onInput={(e: any) => {
           // si tiene maxLength tipo DNI/RUC → solo números
