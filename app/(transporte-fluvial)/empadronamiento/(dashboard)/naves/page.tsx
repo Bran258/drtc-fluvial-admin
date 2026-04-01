@@ -1,3 +1,5 @@
-export default function NavesPage() {
-  return <div>Tu tabla aquísdsdsds</div>;
+import { NavesPage } from "@/features/transporte-fluvial/empadronamiento/dashboard";
+
+export default function Page() {
+  return <NavesPage />;
 }

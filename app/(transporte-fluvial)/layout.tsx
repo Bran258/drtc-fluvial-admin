@@ -1,6 +1,6 @@
-import Sidebar from "@/components/Sidebar";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Sidebar from "@/shared/components/Sidebar";
+import Navbar from "@/shared/components/Navbar";
+import Footer from "@/shared/components/Footer";
 
 export default function TransporteFluvialLayout({
   children,
