@@ -10,7 +10,7 @@ import { toastEmpadronamiento } from "@/lib/toast";
 import Swal from "sweetalert2";
 
 import { useSpeech } from "@/shared/hooks/useSpeech";
-import { GUIA_FORMULARIO } from "@/features/transporte-fluvial/empadronamiento/shared/utils/guiaFormulario";
+import { GUIA_FORMULARIO } from "@/features/fluvial/tramites/empadronamiento/shared/utils/guiaFormulario";
 
 import { useTour } from "@/shared/hooks/useTour";
 import { EMPADRONAMIENTO_TOURS } from "@/shared/tours/empadronamiento.tour";
@@ -102,7 +102,7 @@ const EmpadronamientoForm = () => {
         <div className="min-h-screen bg-[#f8fafc] p-8 font-sans text-slate-700">
             {/* Navegación Superior */}
             <BackButton
-                backHref="/empadronamiento/dashboard"
+                backHref="/fluvial/tramites/empadronamiento/dashboard"
                 backLabel="regresar"
                 stepText="Paso 1 de 3 completar el formulario"
             />

@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "@/features/transporte-fluvial/empadronamiento/dashboard/components/Header";
-import StatsCards from "@/features/transporte-fluvial/empadronamiento/dashboard/components/StatsCards";
-import SubNav from "@/features/transporte-fluvial/empadronamiento/dashboard/components/SubNav";
+import Header from "@/features/fluvial/tramites/empadronamiento/dashboard/components/Header";
+import StatsCards from "@/features/fluvial/tramites/empadronamiento/dashboard/components/StatsCards";
+import SubNav from "@/features/fluvial/tramites/empadronamiento/dashboard/components/SubNav";
 
 export default function Layout({
   children,

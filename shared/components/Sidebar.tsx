@@ -39,64 +39,51 @@ const Sidebar = () => {
     {
       section: "PRINCIPAL",
       items: [
-        { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+        { name: "Dashboard", icon: LayoutDashboard, href: "/fluvial/dashboard" },
       ],
     },
     {
       section: "SERVICIOS FLUVIALES",
       items: [
-        { name: "Empadronamiento", icon: Users, href: "/empadronamiento" },
+        {
+          name: "Empadronamiento",
+          icon: Users,
+          href: "/fluvial/tramites/empadronamiento/dashboard"
+        },
         {
           name: "Permisos de Operación",
           icon: FileText,
-          href: "/permiso-operacion",
+          href: "/fluvial/tramites/permiso-operacion",
           disabled: true,
         },
         {
           name: "Renovación",
           icon: RefreshCw,
-          href: "/renovacion",
-          disabled: true,
+          href: "/fluvial/tramites/renovacion",
+          disabled: false,
         },
         {
           name: "Cambio de Razón Social",
           icon: Building2,
-          href: "/cambio-razon-social",
+          href: "/fluvial/tramites/cambio-razon-social",
           disabled: true,
         },
       ],
     },
     {
-      section: "ADMINISTRAR LANDING",
+      section: "ADMINISTRAR PORTAL WEB",
       items: [
         {
-          name: "Reportes",
+          name: "Tipos de Trámites",
           icon: BarChart3,
-          href: "/reportes",
-          disabled: true,
+          href: "/portal-web/tramites",
+          disabled: false,
         },
         {
-          name: "Configuración",
+          name: "noticias",
           icon: Settings,
-          href: "/configuracion",
-          disabled: true,
-        },
-      ],
-    },
-    {
-      section: "ADMINISTRACIÓN",
-      items: [
-        {
-          name: "Reportes",
-          icon: BarChart3,
-          href: "/reportes",
-          disabled: true,
-        },
-        {
-          name: "Configuración",
-          icon: Settings,
-          href: "/configuracion",
-          disabled: true,
+          href: "/portal-web/noticias",
+          disabled: false,
         },
       ],
     },
@@ -220,7 +207,7 @@ const Sidebar = () => {
                           onClick={(e) => {
                             if (isDisabled) e.preventDefault();
                           }}
-                          className={`flex items-center justify-center  ${collapsed
+                          className={`flex items-center justify-start ${collapsed
                             ? "w-12 h-12 p-0"
                             : "gap-3 px-3 w-full"
                             } py-2.5 rounded-xl text-sm transition-all ${isDisabled

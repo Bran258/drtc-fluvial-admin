@@ -10,7 +10,7 @@ export default function Header() {
       <TitleHeader title="Empadronamiento" />
 
       <Button
-        href="/empadronamiento/registro/sin-resolucion"
+        href="/fluvial/tramites/empadronamiento/formulario/sin-resolucion"
         icon={<ClipboardPenLine size={16} />}
       >
         Nuevo Empadronamiento
