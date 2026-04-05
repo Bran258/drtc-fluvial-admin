@@ -8,11 +8,11 @@ export function proxy(request: NextRequest) {
   const isAuthPage = pathname.startsWith("/auth");
 
   const isProtectedRoute =
-    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/fluvial/dashboard") ||
 
     //pathname.startsWith("/empadronamiento") ||
-    pathname.startsWith("/permiso-operacion") ||
-    pathname.startsWith("/renovacion");
+    pathname.startsWith("/fluvial/tramites/permiso-operacion") ||
+    pathname.startsWith("/fluvial/tramites/renovacion");
     //colocar las nuevas rutas para proteccion 
 
 
@@ -28,7 +28,7 @@ export function proxy(request: NextRequest) {
 
   // 🔴 Evitar entrar a /auth si ya hay sesión
   if (token && isAuthPage) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/fluvial/dashboard", request.url));
   }
 
   return NextResponse.next();

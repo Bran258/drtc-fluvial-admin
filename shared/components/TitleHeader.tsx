@@ -2,23 +2,32 @@ import React from "react";
 
 interface TitleHeaderProps {
   title: string;
-  rightContent?: React.ReactNode; // 👈 opcional
+  description?: string;
+  rightContent?: React.ReactNode;
 }
 
-const TitleHeader = ({ title, rightContent }: TitleHeaderProps) => {
+const TitleHeader = ({ title, description, rightContent }: TitleHeaderProps) => {
   return (
-    <div className="flex justify-between items-center mb-10">
+    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
       
-      <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
-        {title}
-      </h1>
+      {/* IZQUIERDA */}
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900">
+          {title}
+        </h1>
+        {description && (
+          <p className="text-slate-500 text-sm capitalize">
+            {description}
+          </p>
+        )}
+      </div>
 
+      {/* DERECHA */}
       {rightContent && (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {rightContent}
         </div>
       )}
-
     </div>
   );
 };

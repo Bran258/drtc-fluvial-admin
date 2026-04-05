@@ -11,33 +11,36 @@ type Props = {
 
 const BackButton = ({
   backHref,
-  stepText = "Paso 1 de 1: Información General",
+  stepText,
   backLabel = "Regresar",
 }: Props) => {
   return (
-    <div className="max-w-4xl mx-auto mb-6 flex items-center justify-between">
-      
-      {/* Botón volver */}
+    <div className="flex items-center justify-between mb-6">
+
+      {/* 🔙 VOLVER */}
       <Link
         href={backHref}
-        className="group flex items-center gap-2 text-slate-400 hover:text-[#001f3f] transition-colors"
+        className="group flex items-center gap-2 text-slate-500 hover:text-[#001f3f] transition-all"
       >
-        <div className="p-1.5 rounded-lg group-hover:bg-blue-50 transition-colors">
+        <div className="flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 bg-white shadow-sm group-hover:bg-blue-50 group-hover:border-blue-200 transition">
           <ChevronLeft size={18} />
         </div>
-        <span className="text-xs font-bold tracking-widest uppercase">
+
+        <span className="text-xs font-semibold tracking-wide uppercase">
           {backLabel}
         </span>
       </Link>
 
-      {/* Información del paso */}
-      <div className="flex items-center gap-2 text-slate-400">
-        <Info size={14} />
-        <span className="text-[10px] font-medium uppercase tracking-tighter">
-          {stepText}
-        </span>
-      </div>
+      {/* ℹ️ STEP INFO SOLO SI EXISTE */}
+      {stepText && (
+        <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+          <Info size={14} className="text-slate-500" />
 
+          <span className="text-[11px] font-semibold text-slate-600 tracking-wide">
+            {stepText}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

@@ -100,14 +100,13 @@ const EmpadronamientoForm = () => {
 
     return (
         <div className="min-h-screen bg-[#f8fafc] p-8 font-sans text-slate-700">
-            {/* Navegación Superior */}
-            <BackButton
-                backHref="/fluvial/tramites/empadronamiento/dashboard"
-                backLabel="regresar"
-                stepText="Paso 1 de 3 completar el formulario"
-            />
-            {/* Cabecera */}
+            {/* Header*/}
             <div className="max-w-4xl mx-auto mb-8">
+                <BackButton
+                    backHref="/fluvial/tramites/empadronamiento/dashboard"
+                    backLabel="regresar"
+                    stepText="Paso 1 de 3 completar el formulario"
+                />
                 <TitleHeader title="Formulario de Empadronamiento Fluvial" />
                 <p className="text-sm text-slate-500 max-w-2xl leading-relaxed">
                     Complete el formulario oficial para el registro y actualización de datos de embarcaciones ante la Dirección Regional de Transportes.
