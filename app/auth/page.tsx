@@ -25,7 +25,7 @@ export default function LoginPage() {
 
       await axios.post("/auth/login", { email, password });
 
-      window.location.href = "/dashboard";
+      window.location.href = "/fluvial/dashboard";
 
     } catch (error: any) {
       alert(error.response?.data?.message || "Error de conexión");

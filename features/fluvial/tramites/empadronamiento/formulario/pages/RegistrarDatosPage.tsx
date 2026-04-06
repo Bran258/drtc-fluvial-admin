@@ -103,7 +103,7 @@ const EmpadronamientoForm = () => {
             {/* Header*/}
             <div className="max-w-4xl mx-auto mb-8">
                 <BackButton
-                    backHref="/fluvial/tramites/empadronamiento/dashboard"
+                    backHref="/fluvial/tramites/empadronamiento/opciones"
                     backLabel="regresar"
                     stepText="Paso 1 de 3 completar el formulario"
                 />

@@ -1,0 +1,1 @@
+export { default as OpcionesPage } from "./page/OpcionesPage";

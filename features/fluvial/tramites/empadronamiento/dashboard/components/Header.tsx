@@ -15,10 +15,10 @@ export default function Header() {
         description={today}
         rightContent={
           <Button
-            href="/fluvial/tramites/empadronamiento/formulario/sin-resolucion"
+            href="/fluvial/tramites/empadronamiento/opciones"
             icon={<ClipboardPenLine size={16} />}
           >
-            Nuevo Empadronamiento
+            Tramites Empadronamiento
           </Button>
         }
       />
