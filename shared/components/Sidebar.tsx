@@ -71,6 +71,29 @@ const Sidebar = () => {
       ],
     },
     {
+      section: "RECEPCIÓN DOCUMENTARIA",
+      items: [
+        {
+          name: "Recepción de documentos",
+          icon: Users,
+          href: "/fluvial/recepcion",
+          base: "/fluvial/recepcion",
+        },
+        {
+          name: "Bandeja de revisión",
+          icon: FileText,
+          href: "/fluvial/recepcion/revision",
+          base: "/fluvial/recepcion",
+        },
+        {
+          name: "Observados y Rechazados",
+          icon: RefreshCw,
+          href: "/fluvial/recepcion/observados",
+          base: "/fluvial/recepcion",
+        },
+      ],
+    },
+    {
       section: "SERVICIOS FLUVIALES",
       items: [
         {
@@ -240,8 +263,8 @@ const Sidebar = () => {
                             if (isDisabled) e.preventDefault();
                           }}
                           className={`flex items-center ${collapsed
-                              ? "justify-center w-12 h-12 p-0"
-                              : "justify-start gap-3 px-3 w-full"
+                            ? "justify-center w-12 h-12 p-0"
+                            : "justify-start gap-3 px-3 w-full"
                             } py-2.5 rounded-xl text-sm transition-all ${isDisabled
                               ? "text-slate-400 cursor-not-allowed opacity-70"
                               : active
