@@ -16,7 +16,7 @@ export const PROCEDURES: ProcedureItem[] = [
       "Se registrar los datos de las naves y su propietario. Requiere información detallada de la embarcación y documentación del propietario.",
     icon: "ship",
     buttonText: "INICIAR PROCESO",
-    href: "/fluvial/nave",
+    href: "/fluvial/tramites/empadronamiento/opciones/formulario/registrar-nave-propietario",
     variant: "default",
   },
   {

@@ -1,5 +1,5 @@
-import PropietariosPage from "@/features/fluvial/tramites/empadronamiento/dashboard/pages/PropietarioPage";
+import Listar_propietariosView from "@/features/fluvial/propietarios-naves/listar/page/Listar_propietariosView";
 
 export default function Page() {
-  return <PropietariosPage />;
+  return <Listar_propietariosView/>;
 }

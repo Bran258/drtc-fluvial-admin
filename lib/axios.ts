@@ -97,7 +97,7 @@ axiosInstance.interceptors.response.use(
 
       localStorage.removeItem("access_token");
 
-      window.location.href = "/login";
+      window.location.href = "/auth";
 
       return Promise.reject(err);
     } finally {
