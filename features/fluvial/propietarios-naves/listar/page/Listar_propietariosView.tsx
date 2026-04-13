@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { usePropietarios } from "../hook/usePropietarios";
-import { PropietarioTable } from "../components/PropietarioTable";
-import { Pagination } from "../components/Pagination";
+import { DataTable } from "@/shared/components/table-pagination/DataTable";
+import { getPropietarioColumns } from "../components/table/propietario.columns";
+import ModalDetalle from "../components/modals/ModalDetalle";
+import { Propietario } from "@/shared/api/propietario";
 
 export default function PropietariosListPage() {
     const {
@@ -13,48 +16,75 @@ export default function PropietariosListPage() {
         setPage,
         total,
         limit,
+        search,
+        setSearch,
+        onSearchSubmit,
         refetch,
+        searchType,
+        setSearchType,
     } = usePropietarios();
 
-    return (
-        <section className="min-h-screen bg-gray-100 p-6 text-black">
-            <div className="max-w-7xl mx-auto space-y-6">
+    const [selectedItem, setSelectedItem] = useState<Propietario | null>(null);
 
-                {/* HEADER */}
-                <div className="flex items-center justify-between">
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+
+    const columns = getPropietarioColumns({
+        onDelete: (item) => console.log("Eliminar:", item),
+        onView: (item) => setSelectedItem(item),
+    });
+
+    return (
+        <section className="min-h-screen">
+            <div className="mx-auto space-y-6">
+
+                <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 shadow-lg flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-black">
-                            Propietarios
-                        </h1>
-                        <p className="text-sm text-gray-600">
-                            Gestión de registros del sistema
+                        <h1 className="text-2xl font-bold">Propietarios</h1>
+                        <p className="text-blue-100 text-sm">
+                            Gestión y control de registros del sistema
                         </p>
                     </div>
 
                     <button
                         onClick={refetch}
-                        className="px-4 py-2 rounded-xl bg-black text-white font-medium hover:bg-gray-800 transition"
+                        className="px-4 py-2 rounded-xl bg-white text-blue-700 font-medium"
                     >
-                        Recargar
+                        🔄 Recargar
                     </button>
                 </div>
 
-                {loading && <div className="text-gray-700">Cargando...</div>}
-                {error && <div className="text-red-600 font-medium">{error}</div>}
-
-                {!loading && !error && (
-                    <>
-                        <PropietarioTable data={data} />
-
-                        <Pagination
-                            page={page}
-                            total={total}
-                            limit={limit}
-                            onPageChange={setPage}
-                        />
-                    </>
+                {error && (
+                    <div className="bg-red-100 text-red-700 px-4 py-3 rounded-xl">
+                        {error}
+                    </div>
                 )}
+
+                <DataTable
+                    title="Lista de propietarios"
+                    total={total}
+                    data={data}
+                    columns={columns}
+                    keyField="id"
+                    loading={loading}
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                    search={search}
+                    onSearchChange={setSearch}
+                    onSearchSubmit={onSearchSubmit}
+                    searchType={searchType}
+                    onSearchTypeChange={(value) => setSearchType(value as "dni" | "ruc")}
+                    searchTypeOptions={[
+                        { label: "DNI", value: "dni" },
+                        { label: "RUC", value: "ruc" },
+                    ]}
+                />
             </div>
+
+            <ModalDetalle
+                item={selectedItem}
+                onClose={() => setSelectedItem(null)}
+            />
         </section>
     );
 }

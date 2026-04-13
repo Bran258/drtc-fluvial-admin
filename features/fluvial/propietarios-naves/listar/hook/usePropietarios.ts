@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { getPropietarios, Propietario } from "@/shared/api/propietario";
+import {
+  getPropietarios,
+  searchPropietario,
+  Propietario,
+} from "@/shared/api/propietario";
+import { toastGeneral } from "@/lib/toast";
 
 export const usePropietarios = () => {
   const [data, setData] = useState<Propietario[]>([]);
@@ -12,53 +17,146 @@ export const usePropietarios = () => {
   const [limit] = useState(20);
   const [total, setTotal] = useState(0);
 
-  const cache = useRef<Map<number, Propietario[]>>(new Map());
-  const inFlight = useRef(false);
+  const [inputSearch, setInputSearch] = useState("");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
-  const fetchData = async (pageToLoad: number) => {
-    if (inFlight.current) return;
+  const [searchType, setSearchType] = useState<"dni" | "ruc">("dni");
+  const [searchError, setSearchError] = useState<string | null>(null);
 
-    // 🔥 CACHE
-    if (cache.current.has(pageToLoad)) {
-      setData(cache.current.get(pageToLoad)!);
+  const cache = useRef(new Map<string, any>());
+
+  const invalidateCache = () => cache.current.clear();
+
+  // RESET
+  useEffect(() => {
+    invalidateCache();
+    setPage(1);
+    setAppliedSearch("");
+    setInputSearch("");
+  }, [searchType]);
+
+  // LISTADO
+  const fetchList = async (pageToLoad: number) => {
+    const key = `list-${pageToLoad}`;
+
+    if (cache.current.has(key)) {
+      const cached = cache.current.get(key);
+      setData(cached.data);
+      setTotal(cached.total);
       return;
     }
 
     try {
-      inFlight.current = true;
       setLoading(true);
       setError(null);
 
       const res = await getPropietarios(pageToLoad, limit);
-      const payload = res.data;
 
-      setData(payload.data ?? []);
-      setTotal(payload.total ?? 0);
+      const list = res?.data?.data ?? [];
+      const total = res?.data?.total ?? 0;
 
-      cache.current.set(pageToLoad, payload.data ?? []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error");
+      setData(Array.isArray(list) ? list : []);
+      setTotal(total);
+
+      cache.current.set(key, { data: list, total });
+    } catch (e: any) {
+      setError(e?.message || "Error al cargar");
+      setData([]);
+      setTotal(0);
     } finally {
       setLoading(false);
-      inFlight.current = false;
     }
   };
 
+  // SEARCH
+  const fetchSearch = async (q: string) => {
+    const key = `search-${q}-${searchType}`;
+
+    if (cache.current.has(key)) {
+      const cached = cache.current.get(key);
+      setData(cached.data);
+      setTotal(cached.total);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const res = await searchPropietario(q, searchType);
+
+      const list = Array.isArray(res) ? res : res?.data ?? [];
+
+      setData(list);
+      setTotal(list.length);
+
+      cache.current.set(key, { data: list, total: list.length });
+    } catch (e: any) {
+      setError(e?.message || "Error en búsqueda");
+      setData([]);
+      setTotal(0);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // CONTROL CENTRAL
   useEffect(() => {
-    fetchData(page);
-  }, [page]);
+    if (appliedSearch) {
+      fetchSearch(appliedSearch);
+    } else {
+      fetchList(page);
+    }
+  }, [page, appliedSearch, searchType]);
 
-  const goToPage = (p: number) => {
-    const lastPage = Math.ceil(total / limit);
+  // INPUT
+  const onSearchChange = (value: string) => {
+    const clean = value.replace(/\D/g, "");
 
-    if (p < 1 || p > lastPage) return;
+    setInputSearch(clean);
 
-    setPage(p);
+    if (searchType === "dni" && clean && clean.length < 8) {
+      setSearchError("DNI incompleto");
+    } else if (searchType === "ruc" && clean && clean.length < 11) {
+      setSearchError("RUC incompleto");
+    } else {
+      setSearchError(null);
+    }
+
+    if (!clean) {
+      setAppliedSearch("");
+      setPage(1);
+    }
+  };
+
+  // SUBMIT
+  const onSearchSubmit = () => {
+    const q = inputSearch.trim();
+
+    if (!q) {
+      toastGeneral.error("Ingresa un valor para buscar");
+      return;
+    }
+
+    if (searchType === "dni" && q.length !== 8) {
+      toastGeneral.error("El DNI debe tener 8 dígitos");
+      return;
+    }
+
+    if (searchType === "ruc" && q.length !== 11) {
+      toastGeneral.error("El RUC debe tener 11 dígitos");
+      return;
+    }
+
+    setPage(1);
+    setAppliedSearch(q);
   };
 
   const refetch = () => {
-    cache.current.delete(page);
-    fetchData(page);
+    invalidateCache();
+
+    if (appliedSearch) fetchSearch(appliedSearch);
+    else fetchList(page);
   };
 
   return {
@@ -66,9 +164,19 @@ export const usePropietarios = () => {
     loading,
     error,
     page,
-    limit,
+    setPage,
     total,
-    setPage: goToPage,
+    limit,
+
+    search: inputSearch,
+    setSearch: onSearchChange,
+    onSearchSubmit,
+
     refetch,
+
+    searchType,
+    setSearchType,
+
+    searchError,
   };
 };

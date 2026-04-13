@@ -9,11 +9,13 @@ import { useRouter } from "next/navigation";
 import { useCreatePropietario } from "@/shared/hooks/propietario/useCreatePropietario";
 import { usePersonaVerification } from "@/shared/hooks/usePersonaVerification";
 import { useUbicaciones } from "@/shared/hooks/useUbicaciones";
+import type { TipoPersona } from "@/shared/api/propietario";
 
 export default function OwnerForm() {
     const router = useRouter();
     const { create, loading: loadingSubmit } = useCreatePropietario();
     const { ubicaciones, loading: loadingUbicaciones } = useUbicaciones();
+
 
     const [form, setForm] = useState({
         dniRuc: "",
@@ -66,7 +68,7 @@ export default function OwnerForm() {
     // =========================
     // DETECCIÓN INTERNA (BACKEND STYLE)
     // =========================
-    const detectTipoPersona = (doc: string) => {
+    const detectTipoPersona = (doc: string): TipoPersona | null => {
         if (doc.length === 8) return "NATURAL";
 
         if (doc.length === 11) {

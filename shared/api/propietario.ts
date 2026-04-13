@@ -3,11 +3,17 @@ import axiosInstance from "@/lib/axios";
 /**
  * TIPOS BASE
  */
+
+export type TipoPersona =
+  | "NATURAL"
+  | "JURIDICA"
+  | "NATURAL_CON_RUC";
+
 export interface Propietario {
   id: string;
   dniRuc: string;
   propietarioNombre: string;
-  tipoPersona: "NATURAL" | "JURIDICA" | "NATURAL_CON_RUC";
+  tipoPersona: TipoPersona;
 
   representanteLegal?: string | null;
   correo?: string | null;
@@ -28,6 +34,11 @@ export interface PropietariosResponse {
     limit: number;
     lastPage: number;
   };
+}
+
+export interface SearchResponse {
+  data: Propietario[];
+  total: number;
 }
 
 
@@ -77,11 +88,18 @@ export const getPropietarioById = async (
 /**
  * BUSCAR POR DNI/RUC
  */
-export const getByDniRuc = async (
-  dniRuc: string
-): Promise<Propietario> => {
-  const res = await axiosInstance.get(`${BASE}/dni/${dniRuc}`);
-  return res.data;
+export const searchPropietario = async (
+  q: string,
+  type?: string
+): Promise<SearchResponse> => {
+  const { data } = await axiosInstance.get<SearchResponse>(
+    `${BASE}/search`,
+    {
+      params: { q, type },
+    }
+  );
+
+  return data;
 };
 
 /**
